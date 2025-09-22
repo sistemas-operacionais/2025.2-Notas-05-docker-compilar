@@ -1,0 +1,16 @@
+# Arquivos binários compilados
+hello
+*.o
+*.out
+a.out
+
+# Logs do Docker
+*.log
+
+# Arquivos temporários
+*.tmp
+*~
+
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
