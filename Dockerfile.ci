@@ -1,0 +1,19 @@
+FROM fedora:latest
+
+# Configurar para ambientes com restrições SSL
+ENV PYTHONHTTPSVERIFY=0
+
+# Atualizar o sistema e instalar ferramentas de desenvolvimento
+# Para ambientes de produção, remova --nogpgcheck por segurança
+RUN dnf update -y --nogpgcheck && \
+    dnf install -y gcc glibc-devel make --nogpgcheck && \
+    dnf clean all
+
+# Criar o diretório /app que será compartilhado
+RUN mkdir -p /app
+
+# Definir /app como diretório de trabalho
+WORKDIR /app
+
+# Comando padrão para manter o container ativo
+CMD ["/bin/bash"]
