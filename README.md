@@ -19,13 +19,57 @@ Este tutorial demonstra como criar uma imagem Docker baseada no Fedora Linux par
 
 ## Tutorial Passo a Passo
 
+### Nos labs do IFRN-CNAT
+
+1. Iniciar o windows
+2. Executar o Docker desktop
+
 ### 1. Criar a Imagem Docker
 
-A primeira etapa é criar uma imagem Docker baseada no Fedora:latest com as ferramentas de desenvolvimento necessárias.
+1. Criar uma pasta para este tutorial `tutorial-docker-dir-compartilhado`
+2. Criar um arquivo `Dockerfile` na pasta `tutorial-docker-dir-compartilhado`
+3. Construir uma imagem nova para este tutorial com o nome `meu_fedora_dir_compartilhado`
+
+A primeira etapa é criar a pasta (`tutorial-docker-dir-compartilhado`) e arquivo (`tutorial-docker-dir-compartilhado/Dockerfile`).
+
+```Dockerfile
+FROM fedora:latest
+
+# Atualizar o sistema e instalar ferramentas de desenvolvimento
+RUN dnf install -y gcc glibc-devel make fish && \
+    dnf clean all
+
+# Criar o diretório /app que será compartilhado
+RUN mkdir -p /app
+
+# Definir /app como diretório de trabalho
+WORKDIR /app
+
+# Comando padrão para manter o container ativo
+CMD ["/bin/bash"]
+
+# Criar o diretório /app que será compartilhado
+RUN mkdir -p /app
+
+# Definir /app como diretório de trabalho
+WORKDIR /app
+
+# Comando padrão para manter o container ativo
+CMD ["/bin/fish"]
+```
+
+- `RUN` executa comando (software) na imagem a ser construída
+  - `&&` permite executar vários comandos em um mesmo `RUN`
+  - `\` faz quebra de linha
+  - `WORKDIR` especifica qual a pasta a ser aberta ao executar o container
+  - `CMD` é o comando a ser executado após o container ser iniciado
+
+A segunda etapa é criar uma imagem Docker baseada no Fedora:latest com as ferramentas de desenvolvimento necessárias.
+Lembrar de acessar a pasta deste tutorial `tutorial-docker-dir-compartilhado` no terminal.
 
 ```bash
 # Construir a imagem com o nome 'minha_imagem_fedora'
-docker build -t minha_imagem_fedora .
+docker build -t meu_fedora_dir_compartilhado .
 ```
 
 O Dockerfile contém:
@@ -41,16 +85,31 @@ Criar um container chamado 'minha_maquina_fedora' com compartilhamento de diret�
 ```bash
 # Executar o container em modo interativo
 # O diretório atual será mapeado para /app dentro do container
-docker run -it --name minha_maquina_fedora -v "$(pwd)":/app minha_imagem_fedora /bin/bash
+docker run -it --name minha_maquina_fedora -v "$(pwd)":/app meu_fedora_dir_compartilhado /bin/fish
 ```
 
 Parâmetros utilizados:
 - `-it`: Modo interativo com terminal
 - `--name minha_maquina_fedora`: Nome do container
 - `-v "$(pwd)":/app`: Mapeia o diretório atual para /app no container
-- `/bin/bash`: Executa o shell bash
+- `/bin/fish`: Executa o shell bash turbinado
 
 ### 3. Compilar e Executar o Programa C
+
+1. Criar o arquivo `tutorial-docker-dir-compartilhado/hello.c`
+2. Acessar o terminal com o container deste tutorial e executar os comandos abaixo
+
+
+```c
+#include <stdio.h>
+
+int main() {
+    printf("Olá! Este programa foi compilado e executado dentro do container Docker!\n");
+    printf("Sistema: Fedora Linux\n");
+    printf("Container: minha_maquina_fedora\n");
+    return 0;
+}
+```
 
 Dentro do container, execute os seguintes comandos:
 
@@ -68,9 +127,118 @@ gcc -o hello hello.c
 ./hello
 ```
 
-### 4. Exemplo de Uso Automatizado
+Agora você pode tentar criar o arquivo `calculadora.c`, conforme código abaixo e compilar e executar no container.
 
-Para facilitar o uso, execute o script automático:
+```c
+#include <stdio.h>
+#include <math.h>
+
+int main() {
+    printf("=== Programa C Avançado - Calculadora ===\n");
+    
+    double a = 10.5, b = 3.2;
+    
+    printf("Número A: %.2f\n", a);
+    printf("Número B: %.2f\n", b);
+    printf("Soma: %.2f\n", a + b);
+    printf("Subtração: %.2f\n", a - b);
+    printf("Multiplicação: %.2f\n", a * b);
+    printf("Divisão: %.2f\n", a / b);
+    printf("Raiz quadrada de A: %.2f\n", sqrt(a));
+    
+    printf("\n=== Compilado e executado no container Docker! ===\n");
+    return 0;
+}
+```
+
+Por fim, para este tutorial, experimente modificar os arquivos, compilar e executar novamente.
+Os arquivos são os mesmos para a máquina hospedeira e para o container.
+Isso permite em ambiente de desenvolvimento ter modificações e testes no container antes de empacotá-los numa imagem para publicar o aplicativo.
+
+### 4. Exemplo de Uso Automatizado usando shellscript
+
+1. Criar o arquivo `tutorial-docker-dir-compartilhado/run_docker_tutorial.sh`
+2. Criar o arquivo `tutorial-docker-dir-compartilhado/compile_and_run.sh`
+3. Acessar o terminal do windows
+
+`tutorial-docker-dir-compartilhado/run_docker_tutorial.sh`
+```sh
+#!/bin/bash
+
+echo "=== Tutorial Docker - Compilar e Executar Programas C ==="
+echo
+
+# Passo 1: Construir a imagem Docker
+echo "Passo 1: Construindo a imagem Docker 'meu_fedora_dir_compartilhado'..."
+docker build -t meu_fedora_dir_compartilhado .
+
+if [ $? -eq 0 ]; then
+    echo "✅ Imagem construída com sucesso!"
+else
+    echo "❌ Erro ao construir a imagem"
+    exit 1
+fi
+
+echo
+echo "Passo 2: Criando e executando o container 'minha_maquina_fedora'..."
+echo "O container será executado em modo interativo com o diretório atual mapeado para /app"
+echo
+
+# Passo 2: Executar o container em modo interativo
+docker run -it --name minha_maquina_fedora -v "$(pwd)":/app meu_fedora_dir_compartilhado /bin/bash
+```
+
+`tutorial-docker-dir-compartilhado/compile_and_run.sh`
+```sh
+#!/bin/bash
+
+echo "=== Comandos para executar dentro do container ==="
+echo
+
+echo "Você está agora dentro do container minha_maquina_fedora!"
+echo "Diretório atual: $(pwd)"
+echo "Arquivos disponíveis:"
+ls -la
+
+echo
+echo "=== Compilando o programa hello.c ==="
+gcc -o hello hello.c
+
+if [ $? -eq 0 ]; then
+    echo "✅ Compilação bem-sucedida!"
+    echo
+    echo "=== Executando o programa hello ==="
+    ./hello
+else
+    echo "❌ Erro na compilação do hello.c"
+fi
+
+echo
+echo "=== Compilando o programa calculadora.c ==="
+gcc -o calculadora calculadora.c -lm
+
+if [ $? -eq 0 ]; then
+    echo "✅ Compilação bem-sucedida!"
+    echo
+    echo "=== Executando a calculadora ==="
+    ./calculadora
+else
+    echo "❌ Erro na compilação da calculadora.c"
+fi
+
+echo
+echo "=== Informações do sistema ==="
+echo "Sistema operacional:"
+cat /etc/os-release | grep PRETTY_NAME
+echo
+echo "Versão do GCC:"
+gcc --version | head -n 1
+echo
+echo "Arquivos executáveis criados:"
+ls -la hello calculadora 2>/dev/null || echo "Nenhum executável encontrado"
+```
+
+Para facilitar o uso, execute o script automático no terminal do windows:
 
 ```bash
 # Na máquina hospedeira
@@ -112,7 +280,7 @@ docker exec -it minha_maquina_fedora /bin/bash
 docker images
 
 # Remover a imagem
-docker rmi minha_imagem_fedora
+docker rmi meu_fedora_dir_compartilhado
 ```
 
 ## Estrutura do Projeto
