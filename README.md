@@ -5,6 +5,23 @@ Notas de aula sobre como compilar e executar programas em um conteiner docker
 
 Este tutorial demonstra como criar uma imagem Docker baseada no Fedora Linux para compilar e executar programas em C, com compartilhamento de arquivos entre a máquina hospedeira e o container.
 
+## Sumário
+
+- [Arquivos do Tutorial](#arquivos-do-tutorial)
+- [Pré-requisitos](#pré-requisitos)
+- [Tutorial Passo a Passo](#tutorial-passo-a-passo)
+  - [Nos labs do IFRN-CNAT](#nos-labs-do-ifrn-cnat)
+  - [1. Criar a Imagem Docker](#1-criar-a-imagem-docker)
+  - [2. Criar e Executar o Container](#2-criar-e-executar-o-container)
+  - [3. Compilar e Executar o Programa C](#3-compilar-e-executar-o-programa-c)
+  - [4. Exemplo de Uso Automatizado usando shellscript](#4-exemplo-de-uso-automatizado-usando-shellscript)
+- [Comandos Docker Úteis](#comandos-docker-úteis)
+- [Estrutura do Projeto](#estrutura-do-projeto)
+- [Como Funciona o Compartilhamento](#como-funciona-o-compartilhamento)
+- [Exemplo de Saída Esperada](#exemplo-de-saída-esperada)
+- [Solução de Problemas](#solução-de-problemas)
+- [Programas de Exemplo Incluídos](#programas-de-exemplo-incluídos)
+
 ## Arquivos do Tutorial
 
 - `Dockerfile` - Arquivo de configuração da imagem Docker
