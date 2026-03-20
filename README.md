@@ -102,7 +102,7 @@ Criar um container chamado 'minha_maquina_fedora' com compartilhamento de diret�
 ```bash
 # Executar o container em modo interativo
 # O diretório atual será mapeado para /app dentro do container
-docker run -it --name minha_maquina_fedora -v "$(pwd)":/app meu_fedora_dir_compartilhado /bin/fish
+docker run -it --name minha_maquina_fedora -v "$(pwd):/app" meu_fedora_dir_compartilhado /bin/fish
 ```
 
 Parâmetros utilizados:
