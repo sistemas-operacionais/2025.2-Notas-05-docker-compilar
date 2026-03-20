@@ -52,24 +52,15 @@ A primeira etapa é criar a pasta (`tutorial-docker-dir-compartilhado`) e arquiv
 ```Dockerfile
 FROM fedora:latest
 
+# Criar o diretório /app que será compartilhado
+RUN mkdir -p /app
+# Definir /app como diretório de trabalho
+WORKDIR /app
+
 # Atualizar o sistema e instalar ferramentas de desenvolvimento
-RUN dnf install -y gcc glibc-devel make fish && \
+RUN dnf update -y && \
+    dnf install -y gcc glibc-devel make fish && \
     dnf clean all
-
-# Criar o diretório /app que será compartilhado
-RUN mkdir -p /app
-
-# Definir /app como diretório de trabalho
-WORKDIR /app
-
-# Comando padrão para manter o container ativo
-CMD ["/bin/bash"]
-
-# Criar o diretório /app que será compartilhado
-RUN mkdir -p /app
-
-# Definir /app como diretório de trabalho
-WORKDIR /app
 
 # Comando padrão para manter o container ativo
 CMD ["/bin/fish"]
