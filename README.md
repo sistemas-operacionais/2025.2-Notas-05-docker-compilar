@@ -24,10 +24,10 @@ Este tutorial demonstra como criar uma imagem Docker baseada no Fedora Linux par
 
 ## Arquivos do Tutorial
 
-- `Dockerfile` - Arquivo de configuração da imagem Docker
-- `hello.c` - Programa C de exemplo
-- `run_docker_tutorial.sh` - Script automático para executar o tutorial
-- `compile_and_run.sh` - Script para compilar e executar dentro do container
+- [`Dockerfile`](https://github.com/sistemas-operacionais/2025.2-Notas-05-docker-compilar/blob/main/Dockerfile) - Arquivo de configuração da imagem Docker
+- [`hello.c`](https://github.com/sistemas-operacionais/2025.2-Notas-05-docker-compilar/blob/main/hello.c) - Programa C de exemplo
+- [`run_docker_tutorial.sh`](https://github.com/sistemas-operacionais/2025.2-Notas-05-docker-compilar/blob/main/run_docker_tutorial.sh) - Script automático para executar o tutorial
+- [`compile_and_run.sh`](https://github.com/sistemas-operacionais/2025.2-Notas-05-docker-compilar/blob/main/compile_and_run.sh) - Script para compilar e executar dentro do container
 
 ## Pré-requisitos
 
